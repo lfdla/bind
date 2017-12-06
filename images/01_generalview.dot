@@ -1,0 +1,16 @@
+digraph diode {
+	rankdir=LR;
+	node [shape = circle, width = "1"];
+	fia [label = "File", shape = plaintext, width = "0.6"];
+	fib [label = "File", shape = plaintext, width = "0.6"];
+	serv [label = "Server"];
+	ega [shape = doublecircle, label = "Emmiting\ngateway"];
+	rga [shape = doublecircle, label = "Receiving\ngateway"];
+	clie [label = "Client"];
+
+	fia -> serv [dir = none];
+	serv -> ega [dir = both, label = "TCP"];
+	ega -> rga [dir = normal, label = "UDP"];
+	rga -> clie [dir = both, label = "TCP"];
+	clie -> fib [dir = none];
+}
