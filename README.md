@@ -11,7 +11,7 @@ Challenges:
 
 Thought it is possible to do the same with a software or hardware firewall, the idea here is to create a electronic isolation that is more difficult to bypass and less subject to human error.
 
-<img src="images/01_generalview.svg" width="80%" height="200">
+<p align="center"><img src="images/01_generalview.svg" width="80%"></p>
 
 ## Some ideas
 
@@ -46,6 +46,6 @@ Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards w
   * Low power consumption allowing USB only powering
   * Ethernet port (managed by the SoC)
 
-<img src="images/10_prototype.svg" width="80%" height="400">
+<p align="center"><img src="images/10_prototype.svg" width="80%"></p>
 
 ![General view](images/11_prototype.jpg)
