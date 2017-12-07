@@ -4,14 +4,14 @@
 
 Transmit data one way.
 
-Difficulties:
+Challenges:
 
   * Impossible to detect loss of transmission
   * Very few protocol and technologies dedicated to this use-case
 
 Thought it is possible to do the same with a software or hardware firewall, the idea here is to create a electronic isolation that is more difficult to bypass and less subject to human error.
 
-![General view](images/01_generalview.png)
+<img src="images/01_generalview.svg" width="80%" height="200">
 
 ## Some ideas
 
@@ -39,13 +39,13 @@ Another approach is to transmit data as a continuous stream. This way the files 
 
 ## Prototype
 
-Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards with the folowing benefits:
+Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards with the following benefits:
 
   * Low footprint
   * Low cost (around 15€ for the 512MB of RAM at the end of 2017)
-  * Low power consumption alowing USB only powering
-  * Ethernet port (drived by the SoC)
+  * Low power consumption allowing USB only powering
+  * Ethernet port (managed by the SoC)
 
-![General view](images/10_prototype.png)
+<img src="images/10_prototype.svg" width="80%" height="400">
 
 ![General view](images/11_prototype.jpg)
