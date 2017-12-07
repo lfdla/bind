@@ -1,10 +1,11 @@
 digraph diode {
+	graph [dpi = 300, bgcolor = "transparent"];
 	rankdir=LR;
-	node [shape = circle, width = "1"];
-	fia [label = "File", shape = plaintext, width = "0.6"];
-	fib [label = "File", shape = plaintext, width = "0.6"];
+	node [shape = circle, width = "1", style = filled, fillcolor = "white"];
+	fia [label = "File", shape = plaintext, style = "", width = "0.6"];
+	fib [label = "File", shape = plaintext, style = "", width = "0.6"];
 	serv [label = "Server"];
-	ega [shape = doublecircle, label = "Emmiting\ngateway"];
+	ega [shape = doublecircle, label = "Emitting\ngateway"];
 	rga [shape = doublecircle, label = "Receiving\ngateway"];
 	clie [label = "Client"];
 
