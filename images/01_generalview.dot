@@ -11,7 +11,7 @@ digraph diode {
 
 	fia -> serv [dir = none];
 	serv -> ega [dir = both, label = "TCP"];
-	ega -> rga [dir = normal, label = "UDP"];
+	ega -> rga [dir = normal, label = "UDP", color = red];
 	rga -> clie [dir = both, label = "TCP"];
 	clie -> fib [dir = none];
 }

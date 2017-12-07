@@ -7,7 +7,7 @@ Transmit data one way.
 Difficulties:
 
   * Impossible to detect loss of transmission
-  * Very few protocol and technologies dedicated to this use case
+  * Very few protocol and technologies dedicated to this use-case
 
 Thought it is possible to do the same with a software or hardware firewall, the idea here is to create a electronic isolation that is more difficult to bypass and less subject to human error.
 
@@ -15,7 +15,7 @@ Thought it is possible to do the same with a software or hardware firewall, the 
 
 ## Some ideas
 
-### The physical diode
+### The physical break
 
 Fast Ethernet networks use two copper pair to communicate : one pair for each way. It is easy to trick the network by disconnecting the receiving copper pair on one side so the transmission can only occur in one way. The receiver gateway is not aware that the data it send is lost.
 
@@ -39,4 +39,13 @@ Another approach is to transmit data as a continuous stream. This way the files 
 
 ## Prototype
 
+Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards with the folowing benefits:
+
+  * Low footprint
+  * Low cost (around 15€ for the 512MB of RAM at the end of 2017)
+  * Low power consumption alowing USB only powering
+  * Ethernet port (drived by the SoC)
+
 ![General view](images/10_prototype.png)
+
+![General view](images/11_prototype.jpg)
