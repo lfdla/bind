@@ -46,6 +46,52 @@ Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards w
   * Low power consumption allowing USB only powering
   * Ethernet port (managed by the SoC)
 
+### Overview
+
 <p align="center"><img src="images/10_prototype.svg" width="80%"></p>
 
 ![General view](images/11_prototype.jpg)
+
+## Software
+
+Serveral tools are used:
+
+  * BASH...
+  * [mbuffer](http://www.maier-komor.de/mbuffer.html): buffers I/O operations and displays the throughput rate. It is multi-threaded, supports network connections, and offers more options than the standard buffer. This is used on the emitting and the receiving gateway to improve the data flow.
+  * [UDPcast](http://www.udpcast.linux.lu/): a file transfer tool that can send data simultaneously to many destinations on a LAN using broadcast and multicast in UDP. This is the real thing. It can transmit data over unidirectionnal link like a satellite transmission. It does error correction and badwidth throttling.
+  * [socat](http://www.dest-unreach.org/socat/doc/socat.html): a command line based utility that establishes two bidirectional byte streams and transfers data between them. Is a general purpose relay used here to send and receive data on TCP.
+
+<p align="center"><img src="images/01_generalview.svg" width="80%"></p>
+
+### On the client
+
+```bash
+while true; do
+	mbuffer -i testfile00.raw -t -m 32M -4 -O 10.42.1.1:2222
+	sleep 16
+done
+```
+
+### One the emitting gateway
+
+```bash
+while true; do
+	export TMPDIR=/tmp; export HOME=/root; mbuffer -q -t -m 32M -4 -I 2222 | udp-sender --no-progress --interface eth0 --rexmit-hello-interval 100 --portbase 9000 --async --fec 8x16/64 --max-bitrate 50m --autostart 2 --nokbd
+	sleep 2
+done
+```
+
+### On the receiving gateway
+
+```bash
+while true; do
+	export TMPDIR=/tmp; export HOME=/root; udp-receiver --no-progress --interface eth0 --portbase 9000 | mbuffer -t -m 32M | socat - TCP4:10.42.0.115:2223,forever,keepalive,keepidle=1,keepintvl=1
+	sleep 1
+done
+```
+
+### On the client
+
+```bash
+socat -u TCP4-LISTEN:2223,bind=10.42.0.115,fork,reuseaddr SYSTEM:"md5sum"
+```

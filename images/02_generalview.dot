@@ -1,0 +1,17 @@
+digraph diode {
+	graph [bgcolor = "transparent"];
+	rankdir=LR;
+	node [shape = circle, width = "1", style = filled, fillcolor = "white"];
+	fia [label = "File", shape = plaintext, style = "", width = "0.6"];
+	fib [label = "File", shape = plaintext, style = "", width = "0.6"];
+	serv [label = "Server"];
+	ega [shape = doublecircle, label = "Emitting\ngateway"];
+	rga [shape = doublecircle, label = "Receiving\ngateway"];
+	clie [label = "Client"];
+
+	fia -> serv [dir = none];
+	serv -> ega [dir = both, label = "  10.42.1  ", headlabel = ".2", taillabel = ".1", labeldistance = 1.6, labelangle = 60];
+	ega -> rga [dir = normal, label = "  192.168.0  ", headlabel = ".1", taillabel = ".2", labeldistance = 1.6, labelangle = 60, color = red];
+	rga -> clie [dir = both, label = "  10.42.0  ", headlabel = ".1", taillabel = ".2", labeldistance = 1.6, labelangle = 60];
+	clie -> fib [dir = none];
+}
