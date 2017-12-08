@@ -39,6 +39,8 @@ Another approach is to transmit data as a continuous stream. This way the files 
 
 ## Prototype
 
+<p align="center"><img src="images/10_prototype.svg" width="80%"></p>
+
 Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards with the following benefits:
 
   * Low footprint
@@ -47,8 +49,6 @@ Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards w
   * Ethernet port (managed by the SoC)
 
 ### Overview
-
-<p align="center"><img src="images/10_prototype.svg" width="80%"></p>
 
 ![General view](images/11_prototype.jpg)
 
