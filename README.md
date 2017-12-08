@@ -54,16 +54,18 @@ Two [Orange PI zero](http://www.orangepi.org/orangepizero/) development boards w
 
 ## Software
 
-Serveral tools are used:
+Several tools are used:
 
   * BASH...
   * [mbuffer](http://www.maier-komor.de/mbuffer.html): buffers I/O operations and displays the throughput rate. It is multi-threaded, supports network connections, and offers more options than the standard buffer. This is used on the emitting and the receiving gateway to improve the data flow.
-  * [UDPcast](http://www.udpcast.linux.lu/): a file transfer tool that can send data simultaneously to many destinations on a LAN using broadcast and multicast in UDP. This is the real thing. It can transmit data over unidirectionnal link like a satellite transmission. It does error correction and badwidth throttling.
+  * [UDPcast](http://www.udpcast.linux.lu/): a file transfer tool that can send data simultaneously to many destinations on a LAN using broadcast and multicast in UDP. This is the real thing. It can transmit data over unidirectional link like a satellite transmission. It does error correction and bandwidth throttling.
   * [socat](http://www.dest-unreach.org/socat/doc/socat.html): a command line based utility that establishes two bidirectional byte streams and transfers data between them. Is a general purpose relay used here to send and receive data on TCP.
 
-<p align="center"><img src="images/01_generalview.svg" width="80%"></p>
+### Network configuration
 
-### On the client
+<p align="center"><img src="images/02_generalview.svg" width="100%"></p>
+
+### On the server
 
 ```bash
 while true; do
@@ -71,6 +73,8 @@ while true; do
 	sleep 16
 done
 ```
+
+Take the file testfile00.raw, put it in a buffer and send it to 10.42.1.1 in TCP on the port 2222.
 
 ### One the emitting gateway
 
@@ -81,17 +85,90 @@ while true; do
 done
 ```
 
+Open port 2222 for listening, take the input and put it in a buffer then broadcast the data on the eth0 interface with forward error correction blocks and bandwidth throttling.
+
 ### On the receiving gateway
 
 ```bash
 while true; do
-	export TMPDIR=/tmp; export HOME=/root; udp-receiver --no-progress --interface eth0 --portbase 9000 | mbuffer -t -m 32M | socat - TCP4:10.42.0.115:2223,forever,keepalive,keepidle=1,keepintvl=1
+	export TMPDIR=/tmp; export HOME=/root; udp-receiver --no-progress --interface eth0 --portbase 9000 | mbuffer -t -m 32M | socat - TCP4:10.42.0.2:2222,forever,keepalive,keepidle=1,keepintvl=1
 	sleep 1
 done
 ```
 
+Listen on eth0 for data, put it in a buffer then send the data on 10.42.0.2 in TCP on port 2222.
+
 ### On the client
 
 ```bash
-socat -u TCP4-LISTEN:2223,bind=10.42.0.115,fork,reuseaddr SYSTEM:"md5sum"
+socat -u TCP4-LISTEN:2222,bind=10.42.0.2,fork,reuseaddr SYSTEM:"md5sum"
 ```
+
+Listen for data and run a md5sum of the receiving files.
+
+## Result
+
+Here are the sdtout of the previous commands.
+
+### On the server
+
+```
+in @  0.0 KiB/s, out @ 14.3 MiB/s, 43.6 MiB total, buffer  10% full,  93% done
+summary: 46.7 MiByte in  3.4sec - average of 13.6 MiB/s
+in @  0.0 KiB/s, out @ 14.4 MiB/s, 44.0 MiB total, buffer   8% full,  94% done
+summary: 46.7 MiByte in  3.4sec - average of 13.8 MiB/s
+...
+```
+
+### One the emitting gateway
+
+```
+Sep 11 14:57:10 opidown udpcast[1547]: Starting transfer: file[] pipe[] port[9000] if[eth0] participants[0]
+Sep 11 14:57:27 opidown bash[696]: [19B blob data]
+Sep 11 14:57:27 opidown udpcast[1547]: Transfer complete.
+Sep 11 14:57:29 opidown bash[696]: stripes=8 redund=16 stripesize=64
+Sep 11 14:57:29 opidown bash[696]: Udp-sender 20120424
+Sep 11 14:57:29 opidown bash[696]: Using mcast address 232.168.42.2
+Sep 11 14:57:29 opidown bash[696]: UDP sender for (stdin) at 192.168.42.2 on eth0
+Sep 11 14:57:29 opidown bash[696]: Broadcasting control to 192.168.42.255
+Sep 11 14:57:29 opidown bash[696]: Starting transfer: 00000029
+Sep 11 14:57:29 opidown udpcast[1554]: Starting transfer: file[] pipe[] port[9000] if[eth0] participants[0]
+Sep 11 14:57:47 opidown bash[696]: [19B blob data]
+Sep 11 14:57:47 opidown udpcast[1554]: Transfer complete.
+Sep 11 14:57:49 opidown bash[696]: stripes=8 redund=16 stripesize=64
+Sep 11 14:57:49 opidown bash[696]: Udp-sender 20120424
+Sep 11 14:57:49 opidown bash[696]: Using mcast address 232.168.42.2
+Sep 11 14:57:49 opidown bash[696]: UDP sender for (stdin) at 192.168.42.2 on eth0
+Sep 11 14:57:49 opidown bash[696]: Broadcasting control to 192.168.42.255
+Sep 11 14:57:49 opidown bash[696]: Starting transfer: 00000029
+...
+```
+
+### On the receiving gateway
+
+```
+Sep 11 15:38:11 opiup bash[1614]: Udp-receiver 20120424
+Sep 11 15:38:11 opiup bash[1614]: UDP receiver for (stdout) at 192.168.42.1 on eth0
+Sep 11 15:38:11 opiup bash[1614]: Connected as #0 to 192.168.42.2
+Sep 11 15:38:11 opiup bash[1614]: Listening to multicast on 232.168.42.2
+Sep 11 15:38:29 opiup bash[1614]: [1.9K blob data]
+Sep 11 15:38:29 opiup bash[1614]: [147B blob data]
+Sep 11 15:38:29 opiup bash[1614]: summary: 46.7 MiByte in 17.9sec - average of 2667 KiB/s
+Sep 11 15:38:30 opiup bash[1614]: Udp-receiver 20120424
+Sep 11 15:38:30 opiup bash[1614]: UDP receiver for (stdout) at 192.168.42.1 on eth0
+Sep 11 15:38:30 opiup bash[1614]: Connected as #0 to 192.168.42.2
+Sep 11 15:38:30 opiup bash[1614]: Listening to multicast on 232.168.42.2
+Sep 11 15:38:48 opiup bash[1614]: [1.9K blob data]
+Sep 11 15:38:48 opiup bash[1614]: [79B blob data]
+Sep 11 15:38:48 opiup bash[1614]: summary: 46.7 MiByte in 17.8sec - average of 2688 KiB/s
+...
+```
+
+### On the client
+
+```
+a6847c8b88f725df2514365ae3c248cc  -
+a6847c8b88f725df2514365ae3c248cc  -
+...
+```
+

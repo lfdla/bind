@@ -11,7 +11,7 @@ digraph diode {
 
 	fia -> serv [dir = none];
 	serv -> ega [dir = both, label = "  10.42.1  ", headlabel = ".2", taillabel = ".1", labeldistance = 1.6, labelangle = 60];
-	ega -> rga [dir = normal, label = "  192.168.0  ", headlabel = ".1", taillabel = ".2", labeldistance = 1.6, labelangle = 60, color = red];
-	rga -> clie [dir = both, label = "  10.42.0  ", headlabel = ".1", taillabel = ".2", labeldistance = 1.6, labelangle = 60];
+	ega -> rga [dir = normal, label = "  192.168.42  ", headlabel = ".1", taillabel = ".2", labeldistance = 1.6, labelangle = 60, color = red];
+	rga -> clie [dir = both, label = "  10.42.0  ", headlabel = ".2", taillabel = ".1", labeldistance = 1.6, labelangle = 60];
 	clie -> fib [dir = none];
 }
